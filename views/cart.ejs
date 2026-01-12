@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตะกร้า - Sound Shop</title>
+  <link href="/css/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+<!-- Navbar -->
+<nav class="bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow-lg">
+  <h1 class="text-3xl font-bold">🎧 Sound Shop</h1>
+  <div class="space-x-6">
+    <a href="/" class="hover:text-gray-300 font-semibold">หน้าแรก</a>
+    <a href="/cart" class="hover:text-gray-300 font-semibold relative">
+      ตะกร้า
+      <% if (cart.length > 0) { %>
+        <span class="absolute -top-2 -right-3 bg-red-600 text-white text-xs rounded-full px-2"><%= cart.reduce((sum,item)=>sum+item.quantity,0) %></span>
+      <% } %>
+    </a>
+  </div>
+</nav>
+
+<div class="container mx-auto p-8">
+  <h2 class="text-4xl font-bold mb-6 text-center">ตะกร้าของคุณ</h2>
+
+  <% if (cart.length === 0) { %>
+    <p class="text-gray-600 text-center text-xl">ยังไม่มีสินค้าในตะกร้า</p>
+  <% } else { %>
+    <div class="space-y-6">
+      <% let total = 0; %>
+      <% cart.forEach(item => {
+           let subtotal = item.price * item.quantity;
+           total += subtotal;
+      %>
+        <div class="bg-white rounded-2xl shadow-lg p-4 flex flex-col md:flex-row justify-between items-center transition hover:shadow-2xl">
+          <div class="flex items-center space-x-4 mb-4 md:mb-0">
+            <img src="<%= item.image %>" class="w-32 h-32 rounded-xl object-cover">
+            <div>
+              <h3 class="text-xl font-bold"><%= item.name %></h3>
+              <p class="text-gray-600 font-semibold">
+                ราคา <%= item.price.toLocaleString() %> LAK
+              </p>
+              <p class="text-gray-700 font-bold">รวม: <%= subtotal.toLocaleString() %> LAK</p>
+
+              <!-- ปุ่ม + / − -->
+              <div class="flex items-center space-x-2 mt-2">
+                <a href="/decrease/<%= item.id %>" class="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400">−</a>
+                <span class="px-2 font-semibold"><%= item.quantity %></span>
+                <a href="/increase/<%= item.id %>" class="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400">+</a>
+              </div>
+            </div>
+          </div>
+          <div>
+            <a href="/remove-from-cart/<%= item.id %>" class="bg-red-600 text-white px-4 py-2 rounded-xl hover:bg-red-700 font-semibold">ลบ</a>
+          </div>
+        </div>
+      <% }) %>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 text-right text-2xl font-bold">
+        ราคารวมทั้งหมด: <%= total.toLocaleString() %> LAK
+      </div>
+
+      <div class="text-right">
+  <a href="/checkout" class="bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition">Checkout</a>
+</div>
+
+    </div>
+  <% } %>
+</div>
+
+</body>
+</html>

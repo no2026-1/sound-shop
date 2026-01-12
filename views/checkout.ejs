@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Sound Shop</title>
+  <link href="/css/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+<!-- Navbar -->
+<nav class="bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow-lg">
+  <h1 class="text-3xl font-bold">🎧 Sound Shop</h1>
+  <div class="space-x-6">
+    <a href="/" class="hover:text-gray-300 font-semibold">หน้าแรก</a>
+    <a href="/cart" class="hover:text-gray-300 font-semibold relative">
+      ตะกร้า
+      <% if (cart.length > 0) { %>
+        <span class="absolute -top-2 -right-3 bg-red-600 text-white text-xs rounded-full px-2"><%= cart.reduce((sum,item)=>sum+item.quantity,0) %></span>
+      <% } %>
+    </a>
+  </div>
+</nav>
+
+<div class="container mx-auto p-8">
+  <h2 class="text-4xl font-bold mb-6 text-center">Checkout</h2>
+
+  <% if (cart.length === 0) { %>
+    <p class="text-gray-600 text-center text-xl">ยังไม่มีสินค้าในตะกร้า</p>
+  <% } else { %>
+    <div class="space-y-6">
+      <% let total = 0; %>
+      <% cart.forEach(item => { 
+           let subtotal = item.price * item.quantity;
+           total += subtotal;
+      %>
+        <div class="bg-white rounded-2xl shadow-lg p-4 flex justify-between items-center">
+          <div class="flex items-center space-x-4">
+            <img src="<%= item.image %>" class="w-24 h-24 rounded-xl object-cover">
+            <div>
+              <h3 class="text-xl font-bold"><%= item.name %></h3>
+              <p class="text-gray-600">ราคา: <%= item.price.toLocaleString() %> LAK x <%= item.quantity %></p>
+              <p class="text-gray-700 font-bold">รวม: <%= subtotal.toLocaleString() %> LAK</p>
+            </div>
+          </div>
+        </div>
+      <% total = total; }) %>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 text-right text-2xl font-bold">
+        ราคารวมทั้งหมด: <%= total.toLocaleString() %> LAK
+      </div>
+
+      <div class="text-right">
+        <button class="bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition">ยืนยันสั่งซื้อ</button>
+      </div>
+    </div>
+  <% } %>
+</div>
+<form action="/checkout" method="POST" class="space-y-4 bg-white p-6 rounded-2xl shadow-lg">
+  <h3 class="text-2xl font-bold mb-4">ข้อมูลผู้สั่งซื้อ</h3>
+  <input type="text" name="name" placeholder="ชื่อ" required class="w-full border rounded-xl px-4 py-2">
+  <input type="text" name="address" placeholder="ที่อยู่" required class="w-full border rounded-xl px-4 py-2">
+  <input type="text" name="phone" placeholder="เบอร์โทร" required class="w-full border rounded-xl px-4 py-2">
+
+  <h3 class="text-2xl font-bold mb-4">เลือกช่องทางชำระเงิน</h3>
+  <select name="payment" class="w-full border rounded-xl px-4 py-2">
+    <option value="โอนเงิน">โอนเงิน</option>
+    <option value="พร้อมเพย์">พร้อมเพย์</option>
+    <option value="บัตรเครดิต">บัตรเครดิต</option>
+  </select>
+
+  <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 w-full mt-4">ยืนยันสั่งซื้อ</button>
+</form>
+
+</body>
+</html>

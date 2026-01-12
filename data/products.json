@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "JBL Charge 5",
+    "price": 1500000,
+    "image": "/images/jbl_charge_5.jpg"
+  },
+  {
+    "id": 2,
+    "name": "JBL Flip 6",
+    "price": 1200000,
+    "image": "/images/jbl_flip_6.jpg"
+  },
+  {
+    "id": 3,
+    "name": "JBL Boombox 2",
+    "price": 4000000,
+    "image": "/images/jbl_boombox_2.jpg"
+  },
+  {
+    "id": 4,
+    "name": "JBL Bar 5.1",
+    "price": 3500000,
+    "image": "/images/jbl_bar_5_1.jpg"
+  }
+]
