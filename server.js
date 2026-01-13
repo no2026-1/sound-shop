@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path'); // เพิ่ม path module
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const app = express();
@@ -20,11 +21,24 @@ app.use((req, res, next) => {
   next();
 });
 
-const products = JSON.parse(fs.readFileSync('./data/products.json'));
+// --- ส่วนที่แก้ไข: การโหลดไฟล์ JSON ---
+let products = [];
+const filePath = path.join(__dirname, 'data', 'products.json');
+
+try {
+  const data = fs.readFileSync(filePath, 'utf8');
+  products = JSON.parse(data);
+  console.log('Successfully loaded products');
+} catch (err) {
+  console.error('Error loading products.json:', err.message);
+  // ป้องกันแอปพังถ้าหาไฟล์ไม่เจอ ให้ products เป็นอาเรย์ว่างไว้ก่อน
+  products = [];
+}
+// ----------------------------------
 
 // หน้าแรก
 app.get('/', (req, res) => {
-  let filteredProducts = products;
+  let filteredProducts = [...products]; // ใช้ spread operator เพื่อไม่ให้กระทบอาเรย์หลัก
 
   const search = req.query.search;
   const price = req.query.price;
@@ -56,10 +70,15 @@ app.get('/', (req, res) => {
 app.get('/add-to-cart/:id',(req,res)=>{
   const id = parseInt(req.params.id);
   const product = products.find(p=>p.id===id);
+  
+  if(!product) return res.status(404).send('Product not found');
+
   if(!req.session.cart) req.session.cart = [];
   const existing = req.session.cart.find(i=>i.id===id);
+  
   if(existing) existing.quantity+=1;
   else req.session.cart.push({...product, quantity:1});
+  
   res.redirect('/cart');
 });
 
@@ -126,8 +145,5 @@ app.post('/checkout',(req,res)=>{
   `);
 });
 
-//app.listen(3000,()=>console.log('Server running on http://localhost:3000'));
-
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
