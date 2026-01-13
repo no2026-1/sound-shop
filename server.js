@@ -145,7 +145,11 @@ app.post('/checkout',(req,res)=>{
   `);
 });
 
-const PORT = process.env.PORT || 3000;
+// เปลี่ยนจาก:
+// console.log(`Server running on http://localhost:${PORT}`)
+
+// เป็นแบบนี้แทน (ตัด localhost ออก หรือเปลี่ยนเป็น 0.0.0.0):
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
